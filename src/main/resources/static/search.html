@@ -1,0 +1,411 @@
+    <!DOCTYPE html>
+    <html lang="zxx" class="no-js" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Mobile Specific Meta -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Favicon-->
+        <link rel="shortcut icon" href="img/fav.png">
+        <!-- Author Meta -->
+        <meta name="author" content="colorlib">
+        <!-- Meta Description -->
+        <meta name="description" content="">
+        <!-- Meta Keyword -->
+        <meta name="keywords" content="">
+        <!-- meta character set -->
+        <meta charset="UTF-8">
+        <!-- Site Title -->
+        <title>学生档案表单搜索</title>
+        <link rel="stylesheet" href="css/linearicons.css" th:href="@{css/linearicons.css}">
+        <link rel="stylesheet" href="css/font-awesome.min.css" th:href="@{css/font-awesome.min.css}">
+        <link rel="stylesheet" href="css/owl.carousel.css" th:href="@{css/owl.carousel.css}">
+        <link rel="stylesheet" href="css/main.css" th:href="@{css/main.css}">
+        <link rel="stylesheet" href="css/bootstrap.css" th:href="@{css/bootstrap.css}">
+    </head>
+    <body>
+        <!-- Start Header Area -->
+        <header class="default-header">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="container">
+                    <img src="" alt="" th:src="@{img/logo.png}" width="130px" height="60px">
+                </div>
+            </nav>
+
+            <!-- Start Search Area -->
+            <section class="top-section-area section-gap">
+                <div class="container">
+                    <div class="input-group stylish-input-group input-group-prepend">
+                        <input type="text" class="form-control"  placeholder="输入学生姓名搜索" value="" required="" id="keyword">
+                        <span class="btn-search input-group-addon">
+                            <button type="button" onclick="search();" style="width: 100%;height: 40px;outline: none;"></button>
+                        </span>
+                    </div>
+                </div>
+            </section>
+            <!-- End top-section Area -->
+        </header>
+        <!-- End Header Area -->
+
+        <!-- Start post Area -->
+        <div class="post-wrapper pt-100" style="min-height: 100px;">
+            <!-- Start post Area -->
+            <section class="post-area">
+                <div class="container">
+                    <div class="row justify-content-center d-flex">
+                        <div class="col-lg-12">
+                            <div class="post-lists search-list" id="coreDiv">
+
+                            </div>
+                            <div >
+                                <!-- 分页部分start -->
+                                <nav aria-label="Page navigation" id="footer-paging">
+                                    <ul class="pagination">
+                                        <li id="li-pages">
+                                        </li>
+                                        <!--<li>
+                                            <a th:href="@{/query/*(page=1,rows=${page.pageSize} )}" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;首页</span>
+                                            </a>
+                                        </li>-->
+                                        <li>
+                                            <a href="javascript:void(0);" onclick="gotoPre();" id="prePage" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;上一页</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" onclick="gotoNext()" aria-label="Next">
+                                                <span aria-hidden="true">下一页&raquo;</span>
+                                            </a>
+                                        </li>
+                                        <!--<li>
+                                            <a th:href="@{/permission/applyList/(currentPage=${page.totalPageCount},pageSize=${page.pageSize} )}" aria-label="Next">
+                                                <span aria-hidden="true">尾页&raquo;</span>
+                                            </a>
+                                        </li>-->
+                                        <li>
+                                            <!-- 调整pageSize start -->
+                                                <span class="footer-page">每页显示：
+                                                    <select id="pageSizes" onchange="changePageSize()">
+                                                        <option value ="10" selected="selected">10</option>
+                                                        <option value ="20">20</option>
+                                                        <option value="50">50</option>
+                                                    </select>
+                                                </span>
+                                            <!-- 调整pageSize结束 -->
+                                        </li>
+                                    </ul>
+                                </nav>
+                                <!-- 分页部分end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- End post Area -->
+        </div>
+        <!-- End post Area -->
+
+        <div id="div-pages" style="display: none;">
+            <!--<input type="hidden" th:value="${page}" id="pageObj">-->
+            总条数：<span th:text="${page.totalCount}" id="total"></span>&nbsp;&nbsp;
+            总页数：<span th:text="${page.totalPageCount}" id="lastPage"></span>&nbsp;&nbsp;
+            当前页码：<span th:text="${page.currentPage}" id="currentPage"></span>
+        </div>
+
+        <!-- template start  -->
+        <div class="single-list flex-row d-flex" id="contentDiv">
+            <div class="detail" id="detail-panel" style="display: none;">
+                <img src="img/print.png" style="float: right;" width="40px;" title="打印" onclick="onPrint()" id="tb-print">
+                <!-- templateContent start  -->
+                <table id="table" style="table-layout:fixed;word-break:break-all; word-wrap:break-all;" class="page" align="center">
+                    <caption class="theader">
+                        <p align="center">
+                            <img src="http://www.thelittlebridge.cn/favicon.ico" class="logo">
+                            <span class="table-title">上海浦东新区民办筑桥实验小学一年级入学申请表</span>
+                        </p>
+                        <span class="table-subtitle">上海市小学入学信息登记表登记号：<span class="applyId"></span></span>
+                        <hr class="line" />
+                    </caption>
+                    <th colspan="10"><span class="tips">重要提示：5月18日参加民办小学面谈须携带《上海市小学入学信息登记表》及相关验证材料（详见学校官网通知）。</span></th>
+                    <tr>
+                        <td colspan="10" class="th_title">第一部分&nbsp;&nbsp;申请人信息</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">学生姓名：<span id="stuName"></span></td>
+                        <td colspan="4">英文名：<span id="enName"></span></td>
+                        <td rowspan="4" colspan="2" id="stuIcon" style="text-align: center;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">性别：<span id="gender"></span></td>
+                        <td colspan="3">国籍：<span id="nationality"></span></td>
+                        <td colspan="3">民族：<span id="nation"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="8">出生日期：<span id="stuBirth"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="8">学生身份证件类型：<span id="identityType"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">证件号码：<span id="identityNo"></span></td>
+                        <td colspan="5">证件有效期：<span id="identityValidPeriod"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="10">户籍地址：<span id="householdAddr"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="10">学生持上海市居住证类型：<span id="residenceType"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="10">居住地址：<span id="residenceAddr"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" valign="top">
+                            <p>家长常用电子邮箱：</p><span id="commonMail"></span><p/>
+                        </td>
+                        <td colspan="5">
+                            <p>信件寄至：<span id="letterAddr"></span></p>
+                            <p class="postcode" style="margin-right: 10%;">邮编：<span id="zipCode"></span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="10">就读幼儿园全称、地址、电话：<span id="kindergardenDesc"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="10">
+                            <p>1）是否有食物过敏或其他健康状况需要学校特殊照顾的：<span id="isHealth"></span></p>
+                            <p>如有，请做说明：<div width="100%" id="healthRemark"></div></p>
+                            <p>2）是否有其他特别教育需求需要学校给予特别关照的：<span id="isSpecial"></span></p>
+                            <p>如有，请做说明：</p>
+                            <div width="100%" id="specialRemark"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="10">
+                            <p>申请人是否独生子女：<span id="isOneChild"></span></p>
+                            <p>如不是独生子女，请填写以下信息：</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">家中共有几个孩子？&nbsp;&nbsp;<span id="childNum"></span></td>
+                        <td colspan="5">申请人是家中第几个孩子？&nbsp;&nbsp;<span id="childOrder"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <p>兄弟姐妹&nbsp;&nbsp;1</p>
+                            <p>姓名：<span id="child1Name"></span></p>
+                            <p>出生日期：<span id="child1Birth"></span></p>
+                            <p>就读学校：<span id="child1School"></span></p>
+                        </td>
+                        <td colspan="5">
+                            <p>兄弟姐妹&nbsp;&nbsp;2</p>
+                            <p>姓名：<span id="child2Name"></span></p>
+                            <p>出生日期：<span id="child2Birth"></span></p>
+                            <p>就读学校：<span id="child2School"></span></p>
+                        </td>
+                    </tr>
+                </table>
+
+                <table id="table2" style="table-layout:fixed;word-break:break-all; word-wrap:break-all;" align="center" class="page">
+                    <caption class="theader">
+                        <p align="center">
+                            <img src="http://www.thelittlebridge.cn/favicon.ico" class="logo">
+                            <span class="table-title">上海浦东新区民办筑桥实验小学一年级入学申请表</span>
+                        </p>
+                        <span class="table-subtitle">上海市小学入学信息登记表登记号：<span class="applyId"></span></span>
+                        <hr class="line" />
+                    </caption>
+                    <th colspan="5" class="no_border"><span class="tips">重要提示：5月18日参加民办小学面谈须携带《上海市小学入学信息登记表》及相关验证材料（详见学校官网通知）。</span></th>
+                    <tr>
+                        <td colspan="5">
+                            <span class="th_title">第二部分&nbsp;&nbsp;申请人家庭信息</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="20%"></td>
+                        <td colspan="2" class="txt_1">父亲</td>
+                        <td colspan="2" class="txt_1">母亲</td>
+                    </tr>
+                    <tr>
+                        <td>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</td>
+                        <td colspan="2"><span id="stuFather"></span></td>
+                        <td colspan="2"><span id="stuMother"></span></td>
+                    </tr>
+                    <tr>
+                        <td>出生年月</td>
+                        <td colspan="2"><span id="faBirth"></span></td>
+                        <td colspan="2"><span id="moBirth"></span></td>
+                    </tr>
+                    <tr>
+                        <td>工作单位</td>
+                        <td colspan="2"><span id="faWorkDepart"></span></td>
+                        <td colspan="2"><span id="moWorkDepart"></span></td>
+                    </tr>
+                    <tr>
+                        <td>工作单位是否属于张江园区</td>
+                        <td colspan="2"><span id="faWorkZj"></span></td>
+                        <td colspan="2"><span id="moWorkZj"></span></td>
+                    </tr>
+                    <tr>
+                        <td>职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务</td>
+                        <td colspan="2"><span id="faPosition"></span></td>
+                        <td colspan="2"><span id="moPosition"></span></td>
+                    </tr>
+                    <tr>
+                        <td>最高学历</td>
+                        <td colspan="2"><span id="faHighEdu"></span></td>
+                        <td colspan="2"><span id="moHighEdu"></span></td>
+                    </tr>
+                    <tr>
+                        <td>毕业院校</td>
+                        <td colspan="2"><span id="faGraduated"></span></td>
+                        <td colspan="2"><span id="moGraduated"></span></td>
+                    </tr>
+                    <tr>
+                        <td>手机号码</td>
+                        <td colspan="2"><span id="faTel"></span></td>
+                        <td colspan="2"><span id="moTel"></span></td>
+                    </tr>
+                    <tr>
+                        <td>邮箱地址</td>
+                        <td colspan="2"><span id="faMail"></span></td>
+                        <td colspan="2"><span id="moMail"></span></td>
+                    </tr>
+                    <tr>
+                        <td>微&nbsp;&nbsp;信&nbsp;&nbsp;号</td>
+                        <td colspan="2"><span id="faWechat"></span></td>
+                        <td colspan="2"><span id="moWechat"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <p>申请人与谁居住：<span id="liveWith"></span></p>
+                            <p>如申请人与父母亲以外的监护人共同居住，请提供以下监护人信息：</p>
+                            <p class="other_info">
+                                <span class="info">姓名：<i id="otherGuardian"></i></span>
+                                <span class="info">性别：<i id="otherGender"></i></span>
+                                <span class="info">年龄：<i id="otherAge"></i></span>
+                            </p>
+                            <p class="other_info">
+                                <span>与申请人关系：<i id="otherRelative"></i></span>
+                                <span>手机号码：<i id="otherTel"></i></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <p>申请人家长通过何种渠道了解到我校？</p>
+                            <div id="knowWay" width="100%"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="no_border">
+                            <p>本填表人承诺以上所填信息均真实有效。</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="no_border">
+                            <div class="footer">
+                                <p>填表人签字：</p>
+                                <p>日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期：</p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <!-- templateContent end  -->
+            </div>
+        </div>
+        <!-- template end -->
+
+    <script src="js/vendor/jquery-2.2.4.min.js" th:src="@{js/vendor/jquery-2.2.4.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="js/vendor/bootstrap.min.js" th:src="@{js/vendor/bootstrap.min.js}"></script>
+    <script src="js/jquery.ajaxchimp.min.js" th:src="@{js/jquery.ajaxchimp.min.js}"></script>
+    <script src="js/parallax.min.js" th:src="@{js/parallax.min.js}"></script>
+    <script src="js/owl.carousel.min.js" th:src="@{js/owl.carousel.min.js}"></script>
+    <script src="js/jquery.magnific-popup.min.js" th:src="@{js/jquery.magnific-popup.min.js}"></script>
+    <script src="js/jquery.sticky.js" th:src="@{js/jquery.sticky.js}"></script>
+    <script src="js/main.js" th:src="@{js/main.js}"></script>
+    <script src="js/template.js" th:src="@{js/template.js}"></script>
+
+    <script>
+        var ctxPath = '';
+        var type = "[[${type}]]";
+        var keyword = "";
+        var url = "";
+        var currentPage = parseInt($("#currentPage").text());
+        var lastPage = parseInt($("#lastPage").text());
+        function search(){
+            keyword = $("#keyword").val();
+            $("#footer-paging").hide();
+            if($.trim(keyword) == ""){
+                alert("学生名字不能为空。");
+                return;
+            }
+            url = ctxPath + "query/" + keyword;
+            /*if ($.trim(keyword) == "*"){
+                $("#footer-paging").show();
+            }*/
+            $.get(url,function (data) {
+                console.log(data)
+                if ($.trim(keyword) == "*" && data != null){
+                    $("#footer-paging").show();
+                    getPages(data);
+                }
+                getTemplate(data.results);
+            })
+        }
+
+        //上一页
+        function gotoPre(){
+            //var currentPage = $("#currentPage").text();
+            var pageSize = 10;
+            console.log("当前页码："+ currentPage);
+            if (currentPage <= 1){
+                return ;
+            }else{
+                url = ctxPath + "query/" + keyword + "?page=" + (currentPage-1) + "&rows=" + pageSize ;
+                $.get(url,function (data) {
+                    getTemplate(data.results);
+                    getPages(data);
+                })
+            }
+        }
+
+        //下一页
+        function gotoNext(){
+            //var page =$("#pageObj").val();
+            var pageSize = $("#pageSizes").val();
+            console.log("数值类型："+ typeof (currentPage))
+            if (currentPage >= lastPage){
+                return ;
+            }else{
+                url = ctxPath + "query/" + keyword + "?page=" + (currentPage+1) + "&rows=" + pageSize ;
+                $.get(url,function (data) {
+                    console.log(data);
+                    getTemplate(data.results);
+                    getPages(data);
+                })
+            }
+        }
+
+        //改变页面显示的记录条数
+        function changePageSize(e){
+            var pageSize = $("#pageSizes").val();
+            console.log("页面大小："+pageSize);
+            //var pageSize = e;
+            url = ctxPath + "query/" + keyword + "?page=" + currentPage + "&rows=" + pageSize ;
+            $.get(url,function (data) {
+                getTemplate(data.results);
+                getPages(data);
+            })
+        }
+
+        function onPrint() {
+            var dom = $("#coreDiv").clone();
+            dom.find("#tb-print").remove();
+            window.document.body.innerHTML = dom[0].innerHTML;
+            window.print();
+            window.location.reload();
+        }
+    </script>
+    </body>
+</html>
